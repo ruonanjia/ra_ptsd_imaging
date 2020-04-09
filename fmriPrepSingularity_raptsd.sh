@@ -13,16 +13,20 @@
 #SBATCH --mail-type=ALL
 # ------------------------------------------
 
-SUBJ=(1220)
+SUBJ=(8)
 
-BIDS_DIR="/home/rj299/scratch60/ra_ptsd/data_bids" # change directory
-DERIVS_DIR="/derivatives" # the end point folder for fmriprep (should be in derivatives so don't touch unless you're know what yoou're doing)
+BIDS_DIR="/gpfs/ysm/project/levy_ifat/share/ra_ptsd/data_bids"
+# BIDS_DIR="/home/rj299/scratch60/ra_ptsd/data_bids" # change directory
+DERIVS_DIR="/home/rj299/scratch60/ra_ptsd/fmriprep/derivatives" # the end point folder for fmriprep (should be in derivatives so don't touch unless you're know what yoou're doing)
 WORK_DIR="/home/rj299/scratch60/ra_ptsd/work" # enter working directory here
 
 mkdir -p $HOME/.cache/templateflow
-mkdir -p ${BIDS_DIR}/${DERIVS_DIR}
-mkdir -p ${BIDS_DIR}/derivatives/freesurfer-6.0.1
-ln -s ${BIDS_DIR}/derivatives/freesurfer-6.0.1 ${BIDS_DIR}/${DERIVS_DIR}/freesurfer
+# mkdir -p ${BIDS_DIR}/${DERIVS_DIR}
+mkdir -p ${DERIVS_DIR}
+# mkdir -p ${BIDS_DIR}/derivatives/freesurfer-6.0.1
+mkdir -p ${DERIVS_DIR}/freesurfer-6.0.1
+# ln -s ${BIDS_DIR}/derivatives/freesurfer-6.0.1 ${BIDS_DIR}/${DERIVS_DIR}/freesurfer
+ln -s ${DERIVS_DIR}/freesurfer-6.0.1 ${DERIVS_DIR}/freesurfer
 
 
 export SINGULARITYENV_FS_LICENSE=$HOME/freesurfer_license/licenseFreeSurfer.txt # freesurfer license file
@@ -31,7 +35,9 @@ SINGULARITY_CMD="singularity run --cleanenv -B $HOME/.cache/templateflow:/templa
 
 
 
-cmd="${SINGULARITY_CMD} ${BIDS_DIR} ${BIDS_DIR}${DERIVS_DIR} participant --skip_bids_validation --participant-label ${SUBJ[$SLURM_ARRAY_TASK_ID-1]} -w /work/ -vv --omp-nthreads 8 --nthreads 12 --mem_mb 30000 --output-spaces MNI152NLin2009cAsym:res-2 anat fsnative fsaverage5 --cifti-output --use-aroma"
+# cmd="${SINGULARITY_CMD} ${BIDS_DIR} ${BIDS_DIR}${DERIVS_DIR} participant --skip_bids_validation --participant-label ${SUBJ[$SLURM_ARRAY_TASK_ID-1]} -w /work/ -vv --omp-nthreads 8 --nthreads 12 --mem_mb 30000 --output-spaces MNI152NLin2009cAsym:res-2 anat fsnative fsaverage5 --cifti-output --use-aroma"
+
+cmd="${SINGULARITY_CMD} ${BIDS_DIR} ${DERIVS_DIR} participant --skip_bids_validation --participant-label ${SUBJ[$SLURM_ARRAY_TASK_ID-1]} -w /work/ -vv --omp-nthreads 8 --nthreads 12 --mem_mb 30000 --output-spaces MNI152NLin2009cAsym:res-2 anat fsnative fsaverage5 --cifti-output --use-aroma"
 
 # Setup done, run the command
 echo Running task ${SLURM_ARRAY_TASK_ID}
