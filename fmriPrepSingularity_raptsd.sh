@@ -13,7 +13,7 @@
 #SBATCH --mail-type=ALL
 # ------------------------------------------
 
-SUBJ=(8)
+SUBJ=(1304)
 
 BIDS_DIR="/gpfs/ysm/project/levy_ifat/share/ra_ptsd/data_bids"
 # BIDS_DIR="/home/rj299/scratch60/ra_ptsd/data_bids" # change directory
